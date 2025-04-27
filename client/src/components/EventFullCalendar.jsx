@@ -81,9 +81,16 @@ const EventFullCalendar = ({ events, refreshEvents, onEventClick }) => {
               title="Delete the task"
               description="Are you sure to delete this task?"
               onConfirm={async () => {
-                await deleteEvent(item.event.id);
-                modal.destroy();
-                refreshEvents();
+                try {
+                  const action = await deleteEvent(item.event.id);
+                  if (action) {
+                    message.success(<b>Successfully delete {item.event?.title}</b>)
+                    modal.destroy();
+                    refreshEvents();
+                  }
+                } catch (err) {
+                  message.error(<b>Delete unsuccessful, please try again later.</b>)
+                }
               }}
               okText="Yes"
               cancelText="No"
