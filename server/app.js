@@ -14,13 +14,24 @@ app.use(express.json());
 app.use('/api/events', eventRoutes);
 
 // Root
-app.get('/', (req, res) => {
-  res.send('Event Planner API');
-});
+if (process.env.NODE_ENV === 'production') {
+  const buildPath = path.join(__dirname, '../client/build');
 
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-});
+  app.use(express.static(buildPath));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(buildPath, 'index.html'), (err) => {
+      if (err) {
+        res.status(500).send(err);
+      }
+    });
+  });
+} else {
+  app.get('/', (req, res) => {
+    res.send('Event Planner API Running (development)');
+  });
+}
+
 
 // Sync DB and start server
 sequelize.sync().then(() => {
