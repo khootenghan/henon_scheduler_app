@@ -3,6 +3,7 @@ import React, { useState, useRef } from 'react';
 import { getEvents } from './services/event';
 import EventForm from './components/EventForm';
 import EventTimeline from './components/EventFullCalendar';
+import { message } from 'antd';
 
 const App = () => {
   const [events, setEvents] = useState([]);
@@ -10,6 +11,7 @@ const App = () => {
   const [currentDates, setCurrentDates] = useState([]);
   const formRef = useRef(null); // to trigger the ModalForm
 
+  // Fetch events based on date range
   const fetchEvents = async (dates = []) => {
     const query = {
       startDate: currentDates[0] ? currentDates[0].toISOString() : null,
@@ -18,12 +20,18 @@ const App = () => {
     if (dates.length) {
       query.startDate = dates[0].toISOString();
       query.endDate = dates[1].toISOString();
+      setCurrentDates(dates);
     }
-    const { data } = await getEvents(query);
-    setCurrentDates(dates);
-    setEvents(data);
+    try {
+      const { data } = await getEvents(query);
+      setEvents(data);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+      message.error("Failed to fetch events. Please try again later.");
+    }
   };
 
+  // Display modal based on different components actions
   const handleEventClick = (item) => {
     const clickedEvent = {
       id: item.event.id,

@@ -15,24 +15,34 @@ const EventForm = forwardRef(({ refreshEvents, current = {}, clearCurrentEvent }
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
 
+  // Display modal based on other components actions
   useImperativeHandle(ref, () => ({
     openModal: () => setVisible(true),
   }));
 
+  // Create/update events
   const handleSubmit = async (values) => {
     let func = createEvent
     if (current.id) {
       func = updateEvent
       values.id = current.id
     }
-    await func(values);
-    message.success('Successfully added event');
-    refreshEvents();
-    setVisible(false);
-    form.resetFields();
-    return true;
+    try {
+      const event = await func(values)
+      if (event) {
+        await func(values);
+        message.success(<b>Successfully {current.id ? 'updated' : 'created'} event!</b>);
+        refreshEvents();
+        setVisible(false);
+        form.resetFields();
+        return true;
+      }
+    } catch (err) {
+      if (err.message) message.error(<b>{err.messsage}</b>)
+    }
   };
 
+  // Set initial values for form
   useEffect(() => {
     if (visible) {
       if (current?.id) {
@@ -47,6 +57,7 @@ const EventForm = forwardRef(({ refreshEvents, current = {}, clearCurrentEvent }
     }
   }, [current, form, visible]);
 
+  
   return (
     <>
       <Button
@@ -57,7 +68,7 @@ const EventForm = forwardRef(({ refreshEvents, current = {}, clearCurrentEvent }
         Add New Event
       </Button>
       <ModalForm
-        title="Create or Edit Event"
+        title={`${current?.id ? 'Updating' : 'Create' } Event`}
         open={visible}
         form={form}
         onOpenChange={setVisible}

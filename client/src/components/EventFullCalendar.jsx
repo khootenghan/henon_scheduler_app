@@ -35,6 +35,7 @@ const EventFullCalendar = ({ events, refreshEvents, onEventClick }) => {
     }
   }
 
+  // Drag and drop update event time
   const handleEventDrop = async (info) => {
     const updatedEvent = {
       id: info.event.id,
@@ -47,17 +48,18 @@ const EventFullCalendar = ({ events, refreshEvents, onEventClick }) => {
         message.success(<b>{info.event.title}: Time updated!</b>)
       }
     } catch (error) {
-      message.error(<b>Could not update event!</b>)
+      message.error(<b>Could not update event! Please try again later.</b>)
     }
 
     refreshEvents();
   };
 
+  // Query data based on calendar view/date range
   const handleDatesSet = async (dateInfo) => {
-    console.log(dateInfo)
     refreshEvents([dateInfo.start, dateInfo.end])
   }
 
+  // Edit/delete event with double confirmation on delete
   const handleItemClick = (item) => {
     if (item?.event && onEventClick) {
       const { type, eventTime } = item.event.extendedProps
@@ -117,7 +119,23 @@ const EventFullCalendar = ({ events, refreshEvents, onEventClick }) => {
         eventDrop={handleEventDrop}
         eventClick={handleItemClick}
         datesSet={lodash.debounce(handleDatesSet, 200)}
-        height="auto"
+        height="75vh"
+        eventContent={(e) => {
+          // Display type & event time according to views
+          const display = [
+            <span>{e.event?.title}</span>
+          ]
+          if (e.event?.extendedProps) {
+            const { type, eventTime } = e.event?.extendedProps
+            display.push(<span style={{ marginLeft: 2 }}>({type})</span>)
+            if (['timeGridWeek', 'dayGridMonth'].includes(e.view?.type)) {
+              display.push(<div>
+                {new Date(eventTime[0]).toLocaleString()} - {new Date(eventTime[1]).toLocaleString()}
+              </div>)
+            }
+          }
+          return display
+        }}
       />
     </div>
   );
