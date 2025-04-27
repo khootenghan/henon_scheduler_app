@@ -14,18 +14,14 @@ app.use(express.json());
 app.use('/api/events', eventRoutes);
 
 if (process.env.NODE_ENV === 'production') {
-  const buildPath = path.join(__dirname, '../client/build');
-  console.log('Build Path:', buildPath); // Debug: Print it out
+  const buildPath = path.resolve(__dirname, '../client/build');
+  console.log('Serving static files from:', buildPath);
 
   app.use(express.static(buildPath));
 
+  console.log('serving next files from:', path.join(buildPath, 'index.html'));
   app.get('*', (req, res) => {
-    res.sendFile(path.resolve(buildPath, 'index.html'), (err) => {
-      if (err) {
-        console.error('Error sending index.html:', err);
-        res.status(500).send(err);
-      }
-    });
+    res.sendFile(path.join(buildPath, 'index.html'));
   });
 } else {
   app.get('/', (req, res) => {
