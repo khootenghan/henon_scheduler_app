@@ -13,25 +13,28 @@ app.use(express.json());
 // Routes
 app.use('/api/events', eventRoutes);
 
-// Root
 if (process.env.NODE_ENV === 'production') {
   const buildPath = path.join(__dirname, '../client/build');
+  console.log('Build Path:', buildPath); // Debug: Print it out
 
   app.use(express.static(buildPath));
 
   app.get('*', (req, res) => {
-    res.sendFile(path.join(buildPath, 'index.html'), (err) => {
+    res.sendFile(path.resolve(buildPath, 'index.html'), (err) => {
       if (err) {
+        console.error('Error sending index.html:', err);
         res.status(500).send(err);
       }
     });
   });
 } else {
   app.get('/', (req, res) => {
-    res.send('Event Planner API Running (development)');
+    res.send('API is running (development mode)');
   });
 }
 
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('Static serving from:', path.join(__dirname, '../client/build'));
 
 // Sync DB and start server
 sequelize.sync().then(() => {
