@@ -1,0 +1,3 @@
+# Sequelize / SQLite
+*.sqlite
+*.sqlite3
