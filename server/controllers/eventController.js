@@ -19,7 +19,7 @@ const getEvents = async (req, res) => {
 
 // Create a new event
 const createEvent = async (req, res) => {
-    const { title, type, eventTime } = req.body;
+    const { title, type, eventTime = [] } = req.body;
     const [startDate, endDate] = eventTime
 
     if (!title || !type || !startDate || !endDate) {
@@ -37,7 +37,7 @@ const createEvent = async (req, res) => {
 // Update an event
 const updateEvent = async (req, res) => {
     const { id } = req.params;
-    const { title, type, eventTime } = req.body;
+    const { title, type, eventTime = [] } = req.body;
     const [startDate, endDate] = eventTime
 
     const event = await Event.findByPk(id);

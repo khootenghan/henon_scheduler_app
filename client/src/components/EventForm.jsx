@@ -87,7 +87,7 @@ const EventForm = forwardRef(({ refreshEvents, current = {}, clearCurrentEvent }
         <ProFormText
           name="title"
           label="Title"
-          required
+          rules={[{ required: true }]}
           placeholder="Please type title"
         />
         <ProFormSelect
@@ -95,7 +95,7 @@ const EventForm = forwardRef(({ refreshEvents, current = {}, clearCurrentEvent }
           options={EventTypes.map(type => ({ value: type, label: type }))}
           name="type"
           label="Type"
-          required
+          rules={[{ required: true }]}
           placeholder="Please select type"
         />
         <ProFormDateTimeRangePicker
@@ -103,7 +103,7 @@ const EventForm = forwardRef(({ refreshEvents, current = {}, clearCurrentEvent }
           format="YYYY-MM-DD HH:mm"
           name="eventTime"
           label="Start - End"
-          required
+          rules={[{ required: true }]}
           placeholder="Please choose date"
         />
       </ModalForm>
