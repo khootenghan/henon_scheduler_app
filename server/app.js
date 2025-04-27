@@ -13,7 +13,7 @@ app.use(express.json());
 // Routes
 app.use('/api/events', eventRoutes);
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV == 'production') {
   const buildPath = path.resolve(__dirname, '../client/build');
   app.use(express.static(buildPath));
   
