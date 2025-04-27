@@ -30,7 +30,6 @@ const EventForm = forwardRef(({ refreshEvents, current = {}, clearCurrentEvent }
     try {
       const event = await func(values)
       if (event) {
-        await func(values);
         message.success(<b>Successfully {current.id ? 'updated' : 'created'} event!</b>);
         refreshEvents();
         setVisible(false);

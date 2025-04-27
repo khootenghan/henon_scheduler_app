@@ -116,6 +116,7 @@ const EventFullCalendar = ({ events, refreshEvents, onEventClick }) => {
         editable={true}
         droppable={true}
         events={formatEvents}
+        eventDisplay="block"
         eventDrop={handleEventDrop}
         eventClick={handleItemClick}
         datesSet={lodash.debounce(handleDatesSet, 200)}
