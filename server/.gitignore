@@ -1,0 +1,39 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+package-lock.json
+.pnpm-debug.log
+
+# Sequelize / SQLite
+*.sqlite
+*.sqlite3
+
+# Local Environment
+.env
+.env.local
+.env.*.local
+
+# Mac / System Files
+.DS_Store
+
+# Logs
+logs
+*.log
+log/
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage reports
+coverage/
+
+# Temporary
+tmp/
+temp/
+
+# Build
+dist/
+build/
